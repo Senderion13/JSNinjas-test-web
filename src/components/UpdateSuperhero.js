@@ -8,7 +8,8 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import ImageSelect from "./ImageSelect";
 
 export default function UpdateSuperhero() {
   const [id, setId] = useState(1);
@@ -17,6 +18,12 @@ export default function UpdateSuperhero() {
   const [origin, setOrigin] = useState("");
   const [superpowers, setSuperpowers] = useState("");
   const [phrase, setPhrase] = useState("");
+  const [imageList, setImageList] = useState([]);
+  useEffect(() => {
+    axios.get(`http://localhost:4400/superheroAssets`).then(({ data }) => {
+      //setImageList(data.map((asset) => asset.asset));
+    });
+  }, []);
   return (
     <Accordion>
       <AccordionSummary
@@ -75,14 +82,22 @@ export default function UpdateSuperhero() {
           value={phrase}
           onChange={(e) => setPhrase(e.target.value)}
         />
+        <div style={{ marginTop: "2em" }}>
+          <ImageSelect imageList={imageList} setImageList={setImageList} />
+        </div>
       </AccordionDetails>
 
       <AccordionActions>
         <Button
           onClick={() => {
-            console.log(id);
+            imageList.map((image) => {
+              axios.post(`http://localhost:4400/superheroAssets`, {
+                superhero: id,
+                asset: image.id,
+              });
+            });
+
             axios.patch(`http://localhost:4400/superhero/${id}`, {
-              id: id,
               nickname: nickname,
               real_name: realname,
               origin_description: origin,

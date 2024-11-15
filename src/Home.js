@@ -8,7 +8,7 @@ export default function Home() {
   useEffect(() => {
     axios
       .get(`http://localhost:4400/superhero?page=${page}`)
-      .then((data) => setData(data.data));
+      .then(({ data }) => setData(data));
   }, [page]);
   const navigate = useNavigate();
   return (
@@ -27,7 +27,11 @@ export default function Home() {
             }}
           >
             <img
-              src={superhero?.assets[0]?.uri}
+              src={
+                superhero.superhero_assets.length > 0
+                  ? superhero.superhero_assets[0].asset.uri
+                  : ""
+              }
               alt={superhero.id}
               style={{
                 marginRight: "3em",

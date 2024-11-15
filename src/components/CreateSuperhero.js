@@ -51,7 +51,6 @@ export default function CreateSuperhero() {
           value={phrase}
           onChange={(e) => setPhrase(e.target.value)}
         />
-        {/*useCustomAutocomplete()*/}
       </AccordionDetails>
 
       <AccordionActions>
