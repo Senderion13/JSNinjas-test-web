@@ -11,19 +11,19 @@ export default function About() {
           "currentSuperhero"
         )}`
       )
-      .then((data) => setSuperhero(data.data));
+      .then(({ data }) => setSuperhero(data));
   }, []);
   return !superhero ? (
     <>loading...</>
   ) : (
     <>
       <ImageList sx={{ width: 800, height: 600 }} cols={3} rowHeight={164}>
-        {superhero.assets?.map((item) => (
+        {superhero.superhero_assets?.map((item) => (
           <ImageListItem key={item.id}>
             <img
-              srcSet={item.uri}
-              src={item.uri}
-              alt={item.description}
+              srcSet={item.asset.uri}
+              src={item.asset.uri}
+              alt={item.asset.description}
               loading="lazy"
               style={{ maxHeight: 290, width: "auto" }}
             />
