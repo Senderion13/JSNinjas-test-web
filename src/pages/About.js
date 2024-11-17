@@ -7,7 +7,7 @@ export default function About() {
   useEffect(() => {
     axios
       .get(
-        `http://localhost:4400/superhero/${localStorage.getItem(
+        `${process.env.REACT_APP_API_HOST}/superhero/${localStorage.getItem(
           "currentSuperhero"
         )}`
       )
@@ -18,7 +18,7 @@ export default function About() {
   ) : (
     <>
       <ImageList sx={{ width: 800, height: 600 }} cols={3} rowHeight={164}>
-        {superhero.superhero_assets?.map((item) => (
+        {superhero.superheroAssets?.map((item) => (
           <ImageListItem key={item.id}>
             <img
               srcSet={item.asset.uri}
@@ -41,13 +41,13 @@ export default function About() {
           <h3>Real name</h3>
         </Grid2>
         <Grid2 size={8}>
-          <h3>{superhero.real_name}</h3>
+          <h3>{superhero.realName}</h3>
         </Grid2>
         <Grid2 size={4}>
           <h3>Origin description</h3>
         </Grid2>
         <Grid2 size={8}>
-          <h3>{superhero.origin_description} </h3>{" "}
+          <h3>{superhero.originDescription} </h3>{" "}
         </Grid2>
         <Grid2 size={4}>
           <h3>Superpowers</h3>
@@ -59,7 +59,7 @@ export default function About() {
           <h3>Catch phrase</h3>
         </Grid2>
         <Grid2 size={8}>
-          <h3>{superhero.catch_phrase}</h3>
+          <h3>{superhero.catchPhrase}</h3>
         </Grid2>
       </Grid2>
     </>

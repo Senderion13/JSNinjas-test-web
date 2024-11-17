@@ -9,9 +9,18 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function RemoveSuperhero() {
   const [id, setId] = useState(0);
+
+  const deleteHeroById = () => {
+    axios
+      .delete(`${process.env.REACT_APP_API_HOST}/superhero/${id}`, { id: id })
+      .catch((err) => toast("Can't delete superhero: " + err));
+    return toast("Hero successfully deleted");
+  };
+
   return (
     <Accordion>
       <AccordionSummary
@@ -30,13 +39,7 @@ export default function RemoveSuperhero() {
       </AccordionDetails>
 
       <AccordionActions>
-        <Button
-          onClick={() =>
-            axios.delete(`http://localhost:4400/superhero/${id}`, { id: id })
-          }
-        >
-          Save
-        </Button>
+        <Button onClick={deleteHeroById}>Save</Button>
       </AccordionActions>
     </Accordion>
   );

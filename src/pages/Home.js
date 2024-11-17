@@ -7,10 +7,19 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [superheroCount, setSuperheroCount] = useState();
   const [superheroOnPageCount, setSuperheroOnPageCount] = useState();
+
+  const openSelectedSuperheroInfo = (e) => {
+    localStorage.setItem(
+      "currentSuperhero",
+      e.currentTarget.children[0].getAttribute("alt")
+    );
+    navigate("/about");
+  };
+
   useEffect(() => {
     setSuperheroOnPageCount(5);
     axios
-      .get(`http://localhost:4400/superhero?page=${page}`)
+      .get(`${process.env.REACT_APP_API_HOST}/superhero?page=${page}`)
       .then(({ data }) => {
         setSuperheroCount(data[1]);
         setData(data[0]);
@@ -27,27 +36,21 @@ export default function Home() {
               margin: "1em",
               maxWidth: "40em",
             }}
+            key={superhero.id}
           >
             <div
-              key={superhero.id}
               style={{
                 display: "flex",
                 marginLeft: "2em",
                 justifyItems: "center",
                 cursor: "pointer",
               }}
-              onClick={(e) => {
-                localStorage.setItem(
-                  "currentSuperhero",
-                  e.currentTarget.children[0].getAttribute("alt")
-                );
-                navigate("/about");
-              }}
+              onClick={openSelectedSuperheroInfo}
             >
               <img
                 src={
-                  superhero.superhero_assets?.length > 0
-                    ? superhero.superhero_assets[0].asset.uri
+                  superhero.superheroAssets?.length > 0
+                    ? superhero.superheroAssets[0].asset.uri
                     : ""
                 }
                 alt={superhero.id}
@@ -65,11 +68,11 @@ export default function Home() {
                 <br />
                 <br />
                 <b>Real name: </b>
-                {superhero.real_name}
+                {superhero.realName}
                 <br />
                 <br />
                 <b>Origin description: </b>
-                {superhero.origin_description}
+                {superhero.originDescription}
                 <br />
                 <br />
                 <b>Superpowers: </b>
@@ -77,7 +80,7 @@ export default function Home() {
                 <br />
                 <br />
                 <b>Catchphrase: </b>
-                {superhero.catch_phrase}
+                {superhero.catchPhrase}
                 <br />
                 <br />
               </div>
@@ -95,11 +98,13 @@ export default function Home() {
         }}
       >
         <Pagination
-          count={Math.ceil(superheroCount / superheroOnPageCount)}
+          count={
+            superheroCount
+              ? Math.ceil(superheroCount / superheroOnPageCount)
+              : 0
+          }
           style={{ marginLeft: "40%" }}
-          onChange={(event, value) => {
-            setPage(value);
-          }}
+          onChange={(event, value) => setPage(Number(value))}
           value={page}
         />
         <Button
@@ -107,7 +112,7 @@ export default function Home() {
           style={{ position: "fixed", top: "2em", right: "5em", width: "10em" }}
           onClick={() => navigate("/crud")}
         >
-          CRUD
+          Edit heroes
         </Button>
       </div>
     </>

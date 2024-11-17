@@ -11,7 +11,7 @@ export default function ImageSelect({ imageList, setImageList }) {
   const [images, setImages] = useState([]);
   useEffect(() => {
     axios
-      .get(`http://localhost:4400/asset?limit=100`)
+      .get(`${process.env.REACT_APP_API_HOST}/asset?limit=100`)
       .then(({ data }) => setImages(data));
   }, []);
 

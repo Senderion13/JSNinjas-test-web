@@ -2,7 +2,7 @@ import { React } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import CRUD from "./pages/CRUD";
+import CRUD from "./pages/EditSuperhero";
 
 const router = createBrowserRouter([
   {

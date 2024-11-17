@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function CreateSuperhero() {
   const [nickname, setNickname] = useState("");
@@ -16,6 +17,19 @@ export default function CreateSuperhero() {
   const [origin, setOrigin] = useState("");
   const [superpowers, setSuperpowers] = useState("");
   const [phrase, setPhrase] = useState("");
+
+  const superheroList = () => {
+    axios
+      .post(`${process.env.REACT_APP_API_HOST}/superhero`, {
+        nickname: nickname,
+        realName: realname,
+        originDescription: origin,
+        superpowers: superpowers,
+        catchPhrase: phrase,
+      })
+      .catch((err) => toast("Can't create superhero: " + err));
+    return toast("Hero successfully created");
+  };
   return (
     <Accordion>
       <AccordionSummary
@@ -54,19 +68,7 @@ export default function CreateSuperhero() {
       </AccordionDetails>
 
       <AccordionActions>
-        <Button
-          onClick={() =>
-            axios.post("http://localhost:4400/superhero", {
-              nickname: nickname,
-              real_name: realname,
-              origin_description: origin,
-              superpowers: superpowers,
-              catch_phrase: phrase,
-            })
-          }
-        >
-          Save
-        </Button>
+        <Button onClick={superheroList}>Save</Button>
       </AccordionActions>
     </Accordion>
   );

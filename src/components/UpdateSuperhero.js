@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ImageSelect from "./ImageSelect";
+import { toast } from "react-toastify";
 
 export default function UpdateSuperhero() {
   const [id, setId] = useState(1);
@@ -20,26 +21,55 @@ export default function UpdateSuperhero() {
   const [phrase, setPhrase] = useState("");
   const [imageList, setImageList] = useState([]);
   const [oldSuperheroAssets, setOldSuperheroAssets] = useState([]);
+
+  const updateSuperheroData = () => {
+    oldSuperheroAssets.map((asset) =>
+      axios
+        .delete(`${process.env.REACT_APP_API_HOST}/superheroAssets/${asset.id}`)
+        .catch((err) => toast("Update hero image error: " + err))
+    );
+    imageList.map((image) =>
+      axios
+        .post(`${process.env.REACT_APP_API_HOST}/superheroAssets`, {
+          superhero: id,
+          asset: image.id,
+        })
+        .catch((err) => toast("Update hero image error: " + err))
+    );
+    axios
+      .patch(`${process.env.REACT_APP_API_HOST}/superhero/${id}`, {
+        nickname: nickname,
+        realName: realname,
+        originDescription: origin,
+        superpowers: superpowers,
+        catchPhrase: phrase,
+      })
+      .catch((err) => toast("Update hero image error: " + err));
+    return toast("Hero saved");
+  };
+
   useEffect(() => {
-    axios.get(`http://localhost:4400/superhero/${id}`).then(({ data }) => {
-      if (data) {
-        setNickname(data.nickname);
-        setRealname(data.real_name);
-        setOrigin(data.origin_description);
-        setSuperpowers(data.superpowers);
-        setPhrase(data.catch_phrase);
-        setImageList(data.superhero_assets?.map((asset) => asset.asset));
-        setOldSuperheroAssets(data.superhero_assets);
-      } else {
-        setNickname("");
-        setRealname("");
-        setOrigin("");
-        setSuperpowers("");
-        setPhrase("");
-        setImageList([]);
-        setOldSuperheroAssets([]);
-      }
-    });
+    axios
+      .get(`${process.env.REACT_APP_API_HOST}/superhero/${id}`)
+      .then(({ data }) => {
+        if (data) {
+          setNickname(data.nickname);
+          setRealname(data.realName);
+          setOrigin(data.originDescription);
+          setSuperpowers(data.superpowers);
+          setPhrase(data.catchPhrase);
+          setImageList(data.superheroAssets?.map((asset) => asset.asset));
+          setOldSuperheroAssets(data.superheroAssets);
+        } else {
+          setNickname("");
+          setRealname("");
+          setOrigin("");
+          setSuperpowers("");
+          setPhrase("");
+          setImageList([]);
+          setOldSuperheroAssets([]);
+        }
+      });
   }, [id]);
   return (
     <Accordion>
@@ -89,29 +119,7 @@ export default function UpdateSuperhero() {
       </AccordionDetails>
 
       <AccordionActions>
-        <Button
-          onClick={() => {
-            oldSuperheroAssets.map((asset) =>
-              axios.delete(`http://localhost:4400/superheroAssets/${asset.id}`)
-            );
-            imageList.map((image) => {
-              axios.post(`http://localhost:4400/superheroAssets`, {
-                superhero: id,
-                asset: image.id,
-              });
-            });
-            axios.patch(`http://localhost:4400/superhero/${id}`, {
-              nickname: nickname,
-              real_name: realname,
-              origin_description: origin,
-              superpowers: superpowers,
-              catch_phrase: phrase,
-            });
-            return true;
-          }}
-        >
-          Save
-        </Button>
+        <Button onClick={updateSuperheroData}>Save</Button>
       </AccordionActions>
     </Accordion>
   );
