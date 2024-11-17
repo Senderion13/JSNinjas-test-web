@@ -16,7 +16,9 @@ export default function ImageSelect({ imageList, setImageList }) {
   }, []);
 
   const handleImage = (e) => {
-    const imageId = e.target.lastChild.id ? e.target.lastChild.id : e.target.id;
+    const imageId = e.target.lastChild?.id
+      ? e.target.lastChild.id
+      : e.target.id;
     if (imageId) {
       const imageToAdd = images.find((image) => image.id === Number(imageId));
       if (imageToAdd) {
